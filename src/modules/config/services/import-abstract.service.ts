@@ -42,7 +42,9 @@ export default class ImportAbstractService<T extends BaseEntity, V, P> {
         })
         .filter((v) => v),
     );
+    await this.importClass.before.gerenal(serializeView);
     await this.importClass.repositoryTable.save(serializeView);
+    await this.importClass.after.gerenal(serializeView);
     await this.importClass.repositoryTable.save(removeData);
   }
 
