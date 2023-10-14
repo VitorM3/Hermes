@@ -11,6 +11,8 @@ export default class TestImport extends ImportClass<
 > {
   public after?: null;
   public before?: null;
+  public alternativeGetTable?: null;
+  public alternativeGetView?: null;
   public whereConditionTable: WhereCondition[] = [
     {
       where: 'id',
@@ -38,13 +40,5 @@ export default class TestImport extends ImportClass<
     test.test = table.test;
     test.deletedAt = null;
     return test;
-  }
-
-  public alternativeGetTable(): Promise<void> {
-    return;
-  }
-
-  public alternativeGetView(): Promise<void> {
-    return;
   }
 }

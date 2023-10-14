@@ -42,9 +42,9 @@ export default class ImportAbstractService<T extends BaseEntity, V, P> {
         })
         .filter((v) => v),
     );
-    await this.importClass.before.gerenal(serializeView);
+    await this.importClass.before?.gerenal(serializeView);
     await this.importClass.repositoryTable.save(serializeView);
-    await this.importClass.after.gerenal(serializeView);
+    await this.importClass.after?.gerenal(serializeView);
     await this.importClass.repositoryTable.save(removeData);
   }
 
@@ -67,7 +67,6 @@ export default class ImportAbstractService<T extends BaseEntity, V, P> {
     const serialize = await this.importClass.serialize(view);
     await this.importClass.before?.all(serialize);
     await this.importClass.before?.change(serialize);
-    console.log(serialize);
     await this.importClass.repositoryTable.save(serialize);
     await this.importClass.after?.all(serialize);
     await this.importClass.after?.change(serialize);

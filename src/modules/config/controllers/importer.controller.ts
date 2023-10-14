@@ -22,6 +22,7 @@ export default class ImportController implements OnModuleInit {
 
   @TablesImporterService.event([EImport.t1])
   public async test2(@Payload() test: any) {
+    console.log(test);
     if (test && test.payload) {
       return await this.testImport.sync(test.payload);
     }

@@ -4,20 +4,20 @@ import WhereCondition from './whereCondition.class';
 import ImportAbstractService from 'src/modules/config/services/import-abstract.service';
 import { TPayload } from '../types/payload.type';
 import BaseEntity from 'src/modules/config/domain/entity/base';
+import AlternativeGetClass from './alternative-get.class';
 
 export default abstract class ImportClass<T extends BaseEntity, V, P> {
-  public abstract before?: Transformer<T>;
-  public abstract after?: Transformer<T>;
+  public abstract before?: Transformer<T, P>;
+  public abstract after?: Transformer<T, P>;
   public abstract whereConditionView: WhereCondition[];
   public abstract whereConditionTable: WhereCondition[];
+  public abstract alternativeGetTable?: AlternativeGetClass<T, P>;
+  public abstract alternativeGetView?: AlternativeGetClass<V, P>;
   public abstract serialize(viewData: V): Promise<T>;
   public abstract syncObject(table: T): Promise<T>;
-  public abstract alternativeGetView(): Promise<any>;
-  public abstract alternativeGetTable(): Promise<any>;
+
   private import: ImportAbstractService<T, V, P>;
 
-  public haveAlternativeGetView: boolean = false;
-  public haveAlternativeGetTable: boolean = false;
   public constructor(
     public repositoryTable: Repository<T>,
     public repositoryView: Repository<V>,
@@ -34,9 +34,11 @@ export default abstract class ImportClass<T extends BaseEntity, V, P> {
   }
 
   public async getOneDataByView(payload: P): Promise<V> {
+    await this.before?.formatPayload(payload);
     const where = this.getWhereView(payload);
-    if (this.haveAlternativeGetView) {
-      return await this.alternativeGetView();
+    await this.after?.formatPayload(payload);
+    if (this.alternativeGetView) {
+      return await this.alternativeGetView.one(payload);
     }
     return await this.getOneByDatabase<V>(where, this.repositoryView);
   }
@@ -46,17 +48,23 @@ export default abstract class ImportClass<T extends BaseEntity, V, P> {
     if (!where) {
       return;
     }
-    if (this.haveAlternativeGetTable) {
-      return await this.alternativeGetTable();
+    if (this.alternativeGetTable) {
+      return await this.alternativeGetTable.one(payload);
     }
     return await this.getOneByDatabase<T>(where, this.repositoryTable);
   }
 
   public async getAllDataByView() {
+    if (this.alternativeGetView) {
+      return await this.alternativeGetView.many();
+    }
     return await this.getAllByDatabase<V>(this.repositoryView);
   }
 
   public async getAllDataByTable() {
+    if (this.alternativeGetTable) {
+      return await this.alternativeGetTable.many();
+    }
     return await this.getAllByDatabase<T>(this.repositoryTable);
   }
 
