@@ -4,11 +4,18 @@ import BaseEntity from '../domain/entity/base';
 
 export default abstract class ImportService<T extends BaseEntity, V, P> {
   public constructor(private readonly importClass: ImportClass<T, V, P>) {}
-  public async sync(payload: TPayload<P>) {
-    return await this.importClass.sync(payload);
+  /**
+   * Realizar a importação de apenas 1 dado
+   * @param payload Payload vindo do Kafka
+   */
+  public async import(payload: TPayload<P>) {
+    return await this.importClass.import(payload);
   }
 
-  public async general() {
-    return await this.importClass.general();
+  /**
+   * Realizar a sincronização dos dados da tabela
+   */
+  public async sync() {
+    return await this.importClass.sync();
   }
 }

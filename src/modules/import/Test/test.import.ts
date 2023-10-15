@@ -33,12 +33,4 @@ export default class TestImport extends ImportClass<
     test.deletedAt = null;
     return test;
   }
-
-  public async syncObject(table: TestEntity): Promise<TestEntity> {
-    const test = new TestEntity();
-    test.id = table.id;
-    test.test = table.test;
-    test.deletedAt = null;
-    return test;
-  }
 }

@@ -27,7 +27,7 @@ export default class ImportAbstractService<T extends BaseEntity, V, P> {
     const tableDatum = await this.importClass.getAllDataByTable();
     const serializeTable = await Promise.all(
       tableDatum.map(async (table) => {
-        return await this.importClass.syncObject(table);
+        return await this.importClass.syncObject(table, serializeView[0]);
       }),
     );
     const removeData = await Promise.all(

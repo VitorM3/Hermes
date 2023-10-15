@@ -17,14 +17,14 @@ export default class ImportController implements OnModuleInit {
   }
   onModuleInit() {
     this.tablesImporter.registerTables();
-    this.testImport.general();
+    this.testImport.sync();
   }
 
   @TablesImporterService.event([EImport.t1])
   public async test2(@Payload() test: any) {
     console.log(test);
     if (test && test.payload) {
-      return await this.testImport.sync(test.payload);
+      return await this.testImport.import(test.payload);
     }
   }
 }
