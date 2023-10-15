@@ -13,13 +13,13 @@ export default class TestImport extends ImportClass<
   public before?: null;
   public alternativeGetTable?: null;
   public alternativeGetView?: null;
-  public whereConditionTable: WhereCondition[] = [
+  public whereConditionTable: WhereCondition<TestEntity, TestPayload>[] = [
     {
       where: 'id',
       payload: 'c1',
     },
   ];
-  public whereConditionView: WhereCondition[] = [
+  public whereConditionView: WhereCondition<TestViewEntity, TestPayload>[] = [
     {
       where: 'batatinha1',
       payload: 'c1',

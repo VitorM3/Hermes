@@ -18,11 +18,11 @@ export default abstract class ImportClass<T extends BaseEntity, V, P> {
   /**
    * Condição para busca do dado dentro da view
    */
-  public abstract whereConditionView: WhereCondition[];
+  public abstract whereConditionView: WhereCondition<V, P>[];
   /**
    * Condição para busca do dado dentro da tabela
    */
-  public abstract whereConditionTable: WhereCondition[];
+  public abstract whereConditionTable: WhereCondition<T, P>[];
   /**
    * Forma alternativa de busca dos dados da tabela
    */
@@ -134,7 +134,7 @@ export default abstract class ImportClass<T extends BaseEntity, V, P> {
    * @returns Dado vindo da view ou da tabela
    */
   private async getOneByDatabase<F>(
-    whereCondition: WhereCondition[],
+    whereCondition: WhereCondition<any, P>[],
     repository: Repository<F>,
   ) {
     const where: FindOptionsWhere<F> = {};
@@ -173,7 +173,7 @@ export default abstract class ImportClass<T extends BaseEntity, V, P> {
    * @param whereCondition Condição de busca da importação
    * @returns Condição de busca
    */
-  private getWhere(payload: P, whereCondition: WhereCondition[]) {
+  private getWhere(payload: P, whereCondition: WhereCondition<any, P>[]) {
     if (!payload) {
       return;
     }
